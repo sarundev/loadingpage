@@ -27,7 +27,7 @@ export default function Home() {
   async function handleSubmit(link: TelegramLink) {
     if (!contact.trim() || contact.trim().length < 3) return;
     if (selectedLogos.length === 0) {
-      setErrorMsg("សូមជ្រើសរើស Company ជាមុនសិន");
+      setErrorMsg("សូមជ្រើសរើសការកម្សាន្ត");
       setStatus("error");
       return;
     }
@@ -78,7 +78,7 @@ export default function Home() {
           {/* Logo selection */}
           <div className="w-full">
             <p className="text-sm font-semibold text-[#6b3a00] mb-3">
-              ជ្រើសរើស Company
+              ជ្រើសរើស ការកកម្សាន្ត
             </p>
             <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
               {logos.map((logo) => {
