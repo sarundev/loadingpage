@@ -4,17 +4,16 @@ export const siteConfig = {
   subtitleTop: "សូមចុះឈ្មោះដើម្បី ចូលលេង",
   subtitleBottom: "សូមចុះឈ្មោះដើម្បី ចូលលេង",
 
-  // Add or remove logos freely — each one is a clickable image
+  // Add or remove logos freely — each one is selectable
   logos: [
     {
       src: "/image/logo.png",
       alt: "SK88 Logo",
-      href: "#",
+      name: "SK88",
     },
-
-    { src: "/image/logo1.png", alt: "Logo 2", href: "#" },
-    { src: "/image/logo3.png", alt: "Logo 3", href: "#" },
-    { src: "/image/ph1.png", alt: "Logo 3", href: "#" },
+    { src: "/image/logo1.png", alt: "Logo 2", name: "KDA88" },
+    { src: "/image/logo3.png", alt: "Logo 3", name: "SBC369" },
+    { src: "/image/ph1.png", alt: "Logo 4", name: "SB24" },
   ],
 
   telegramLinks: [

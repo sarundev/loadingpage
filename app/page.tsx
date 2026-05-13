@@ -4,10 +4,12 @@ import { useState } from "react";
 import { siteConfig } from "@/config/site";
 
 type TelegramLink = { label: string; href: string };
+type Logo = { src: string; alt: string; name: string };
 
 export default function Home() {
   const { logos, subtitleTop, telegramLinks, footer } = siteConfig;
 
+  const [selectedLogo, setSelectedLogo] = useState<Logo | null>(null);
   const [contact, setContact] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -15,6 +17,11 @@ export default function Home() {
 
   async function handleSubmit(link: TelegramLink) {
     if (!contact.trim() || contact.trim().length < 3) return;
+    if (!selectedLogo) {
+      setErrorMsg("សូមជ្រើសរើស Company ជាមុនសិន");
+      setStatus("error");
+      return;
+    }
 
     setStatus("loading");
     setErrorMsg("");
@@ -23,11 +30,17 @@ export default function Home() {
       const res = await fetch("/api/telegram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contact, buttonLabel: link.label }),
+        body: JSON.stringify({
+          contact,
+          buttonLabel: link.label,
+          companyName: selectedLogo.name,
+          companyLogo: selectedLogo.src,
+        }),
       });
 
       if (res.ok) {
         setContact("");
+        setSelectedLogo(null);
         setStatus("idle");
         setSuccessLink(link);
       } else {
@@ -54,23 +67,51 @@ export default function Home() {
 
           <div className="w-12 border-b-2 border-[#6b3a00]" />
 
-          {/* Logo gallery */}
-          <div className="grid md:grid-cols-4 grid-cols-2 gap-4 pt-4">
-            {logos.map((logo) => (
-              <a
-                key={logo.src}
-                href={logo.href}
-                className="block hover:opacity-90 transition-opacity"
-              >
-                <div className="rounded-full shadow-lg flex items-center justify-center overflow-hidden">
-                  <img
-                    src={logo.src}
-                    alt={logo.alt}
-                    className="object-cover w-[150px] rounded-full"
-                  />
-                </div>
-              </a>
-            ))}
+          {/* Logo selection */}
+          <div className="w-full">
+            <p className="text-sm font-semibold text-[#6b3a00] mb-3">
+              ជ្រើសរើស Company
+            </p>
+            <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
+              {logos.map((logo) => {
+                const isSelected = selectedLogo?.src === logo.src;
+                return (
+                  <button
+                    key={logo.src}
+                    type="button"
+                    onClick={() => {
+                      setSelectedLogo(logo);
+                      if (status === "error") setStatus("idle");
+                    }}
+                    className={`flex flex-col items-center gap-2 rounded-2xl p-2 border-2 transition-all focus:outline-none ${
+                      isSelected
+                        ? "border-[#6b3a00] shadow-md scale-105"
+                        : "border-transparent hover:border-[#c8913a]"
+                    }`}
+                  >
+                    <div className="rounded-full shadow-lg flex items-center justify-center overflow-hidden">
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="object-cover w-37.5 rounded-full"
+                      />
+                    </div>
+                    <span
+                      className={`text-xs font-semibold text-center ${
+                        isSelected ? "text-[#6b3a00]" : "text-gray-500"
+                      }`}
+                    >
+                      {logo.name}
+                    </span>
+                    {isSelected && (
+                      <span className="text-[10px] bg-[#6b3a00] text-white px-2 py-0.5 rounded-full">
+                        ✓ បានជ្រើស
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Input field */}
@@ -102,7 +143,7 @@ export default function Home() {
                 key={link.label}
                 onClick={() => handleSubmit(link)}
                 disabled={status === "loading" || !contact.trim()}
-                className="flex items-center w-[200px] justify-center gap-2 bg-[#5c2d00] hover:bg-[#7a3a00] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-white font-bold px-7 py-3 rounded-xl text-base"
+                className="flex items-center w-50 justify-center gap-2 bg-[#5c2d00] hover:bg-[#7a3a00] disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-white font-bold px-7 py-3 rounded-xl text-base"
               >
                 {status === "loading" ? (
                   <span className="animate-spin inline-block">⏳</span>
@@ -127,7 +168,6 @@ export default function Home() {
           onClick={(e) => e.target === e.currentTarget && setSuccessLink(null)}
         >
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 flex flex-col items-center gap-5 relative">
-            {/* Close */}
             <button
               onClick={() => setSuccessLink(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold transition-colors"
@@ -136,12 +176,10 @@ export default function Home() {
               ✕
             </button>
 
-            {/* Icon */}
             <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center text-4xl">
               ✅
             </div>
 
-            {/* Message */}
             <h2 className="text-xl font-extrabold text-[#6b3a00] text-center">
               បានទទួលជោគជ័យ!
             </h2>
@@ -150,7 +188,6 @@ export default function Home() {
               និងទំនាក់ទំនងជាមួយភ្នាក់ងាររបស់យើង។
             </p>
 
-            {/* Telegram link button */}
             <a
               href={successLink.href}
               target="_blank"
@@ -161,7 +198,6 @@ export default function Home() {
               {successLink.label}
             </a>
 
-            {/* Close button */}
             <button
               onClick={() => setSuccessLink(null)}
               className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
