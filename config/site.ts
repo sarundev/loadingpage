@@ -9,10 +9,10 @@ export const siteConfig = {
     {
       src: "/image/logo.png",
       alt: "SK88 Logo",
-      name: "SK88",
+      name: "Lotto",
     },
-    { src: "/image/logo1.png", alt: "Logo 2", name: "KDA88" },
-    { src: "/image/logo3.png", alt: "Logo 3", name: "SBC369" },
+    { src: "/image/logo1.png", alt: "Logo 2", name: "Yuki" },
+    { src: "/image/logo3.png", alt: "Logo 3", name: "SCB" },
     { src: "/image/ph1.png", alt: "Logo 4", name: "SB24" },
   ],
 
