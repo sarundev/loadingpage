@@ -198,18 +198,13 @@ export default function Home() {
               href={successLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 bg-[#5c2d00] hover:bg-[#7a3a00] transition-colors text-white font-bold py-3 rounded-xl text-base"
+              className="w-full flex items-center justify-center gap-2 bg-[#d81111] hover:bg-[#751717] transition-colors text-white font-bold py-3 rounded-xl text-base"
             >
               <TelegramIcon />
               {successLink.label}
             </a>
 
-            <button
-              onClick={() => setSuccessLink(null)}
-              className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              បិទ
-            </button>
+           
           </div>
         </div>
       )}
