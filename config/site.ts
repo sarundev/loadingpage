@@ -18,7 +18,7 @@ export const siteConfig = {
   ],
 
   telegramLinks: [
-    { label: "ចុះឈ្មោះ", href: "https://t.me/T1_fakerrr" },
+    { label: "ឆាតផ្ទាល់", href: "https://t.me/T1_fakerrr" },
   ],
 
   footer: "© 2026 KDA88. All Rights Reserved.",
