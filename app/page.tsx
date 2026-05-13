@@ -9,15 +9,24 @@ type Logo = { src: string; alt: string; name: string };
 export default function Home() {
   const { logos, subtitleTop, telegramLinks, footer } = siteConfig;
 
-  const [selectedLogo, setSelectedLogo] = useState<Logo | null>(null);
+  const [selectedLogos, setSelectedLogos] = useState<Logo[]>([]);
   const [contact, setContact] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [successLink, setSuccessLink] = useState<TelegramLink | null>(null);
 
+  function toggleLogo(logo: Logo) {
+    setSelectedLogos((prev) =>
+      prev.some((l) => l.src === logo.src)
+        ? prev.filter((l) => l.src !== logo.src)
+        : [...prev, logo]
+    );
+    if (status === "error") setStatus("idle");
+  }
+
   async function handleSubmit(link: TelegramLink) {
     if (!contact.trim() || contact.trim().length < 3) return;
-    if (!selectedLogo) {
+    if (selectedLogos.length === 0) {
       setErrorMsg("សូមជ្រើសរើស Company ជាមុនសិន");
       setStatus("error");
       return;
@@ -33,14 +42,13 @@ export default function Home() {
         body: JSON.stringify({
           contact,
           buttonLabel: link.label,
-          companyName: selectedLogo.name,
-          companyLogo: selectedLogo.src,
+          companyNames: selectedLogos.map((l) => l.name),
         }),
       });
 
       if (res.ok) {
         setContact("");
-        setSelectedLogo(null);
+        setSelectedLogos([]);
         setStatus("idle");
         setSuccessLink(link);
       } else {
@@ -74,15 +82,12 @@ export default function Home() {
             </p>
             <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
               {logos.map((logo) => {
-                const isSelected = selectedLogo?.src === logo.src;
+                const isSelected = selectedLogos.some((l) => l.src === logo.src);
                 return (
                   <button
                     key={logo.src}
                     type="button"
-                    onClick={() => {
-                      setSelectedLogo(logo);
-                      if (status === "error") setStatus("idle");
-                    }}
+                    onClick={() => toggleLogo(logo)}
                     className={`flex flex-col items-center gap-2 rounded-2xl p-2 border-2 transition-all focus:outline-none ${
                       isSelected
                         ? "border-[#6b3a00] shadow-md scale-105"
@@ -128,6 +133,7 @@ export default function Home() {
               }}
               placeholder="ឧ. 0123456789 ឬ @username"
               minLength={3}
+              maxLength={10}
               className="w-full border-2 border-gray-200 focus:border-[#6b3a00] outline-none rounded-xl px-4 py-3 text-gray-800 placeholder:text-gray-400 transition-colors"
             />
           </div>

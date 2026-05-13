@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { contact, buttonLabel, companyName } = await req.json();
+  const { contact, buttonLabel, companyNames } = await req.json();
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -25,7 +25,10 @@ export async function POST(req: NextRequest) {
     ? `<a href="https://t.me/${username}">${raw}</a>`
     : `<code>${raw}</code>`;
 
-  const company = companyName && typeof companyName === "string" ? companyName.trim() : "—";
+  const company =
+    Array.isArray(companyNames) && companyNames.length > 0
+      ? companyNames.join(", ")
+      : "—";
 
   const text =
     `🔔 <b>ការចុះឈ្មោះថ្មី</b>\n` +
