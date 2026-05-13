@@ -17,7 +17,7 @@ export const siteConfig = {
   ],
 
   telegramLinks: [
-    { label: "ឆាតផ្ទាល់", href: "https://t.me/AABOEUATZK" },
+    { label: "ឆាតផ្ទាល់", href: "https://t.me/AABOEUTKS24" },
   ],
 
   footer: "© 2026 KDA88. All Rights Reserved.",
